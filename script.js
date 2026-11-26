@@ -29,10 +29,32 @@ function saveCartToStorage() {
   localStorage.setItem('shoppingCart', JSON.stringify(items));
 }
  
-// Function to remove an item
 function removeItem(event) {
   const item = event.target.closest('li');
   const price = parseFloat(item.dataset.price);
+  
   updateTotalPrice(-price);
   item.remove();
+  saveCartToStorage();
+}
+
+function updateQuantity(event, change) {
+  const item = event.target.closest('li');
+  const unitPrice = parseFloat(item.dataset.price);
+  let quantity = parseInt(item.dataset.quantity, 10);
+
+  if (quantity + change <= 0) {
+    removeItem(event);
+    return;
+  }
+
+  quantity += change;
+  item.dataset.quantity = quantity;
+
+  const itemText = item.querySelector('.item-info');
+  const subtotal = (unitPrice * quantity).toFixed(2);
+  itemText.textContent = `${item.dataset.name} - $${unitPrice.toFixed(2)} x ${quantity} = $${subtotal}`;
+
+  updateTotalPrice(unitPrice * change);
+  saveCartToStorage();
 }
