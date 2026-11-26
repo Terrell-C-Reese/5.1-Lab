@@ -96,3 +96,33 @@ function renderCartItem(name, price, quantity) {
 
   updateTotalPrice(price * quantity);
 }
+
+function addProduct() {
+  const name = productNameInput.value.trim();
+  const price = parseFloat(productPriceInput.value);
+
+  if (name === '' || isNaN(price) || price <= 0) {
+    alert('Please enter a valid product name and a price greater than $0.');
+    return;
+  }
+
+  renderCartItem(name, price, 1);
+  saveCartToStorage();
+
+  productNameInput.value = '';
+  productPriceInput.value = '';
+  productNameInput.focus();
+}
+
+function loadCartFromStorage() {
+  const savedData = localStorage.getItem('shoppingCart');
+  if (savedData) {
+    const items = JSON.parse(savedData);
+    items.forEach(function (item) {
+      renderCartItem(item.name, Number(item.price), Number(item.quantity));
+    });
+  }
+}
+
+addProductButton.addEventListener('click', addProduct);
+loadCartFromStorage();
