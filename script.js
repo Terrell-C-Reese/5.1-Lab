@@ -58,3 +58,41 @@ function updateQuantity(event, change) {
   updateTotalPrice(unitPrice * change);
   saveCartToStorage();
 }
+
+function renderCartItem(name, price, quantity) {
+  const li = document.createElement('li');
+  li.className = 'cart-item';
+
+  li.dataset.name = name;
+  li.dataset.price = price;
+  li.dataset.quantity = quantity;
+
+  const subtotal = (price * quantity).toFixed(2);
+  const infoSpan = document.createElement('span');
+  infoSpan.className = 'item-info';
+  infoSpan.textContent = `${name} - $${price.toFixed(2)} x ${quantity} = $${subtotal}`;
+
+  const decreaseBtn = document.createElement('button');
+  decreaseBtn.textContent = '-';
+  decreaseBtn.addEventListener('click', function (event) {
+    updateQuantity(event, -1);
+  });
+
+  const increaseBtn = document.createElement('button');
+  increaseBtn.textContent = '+';
+  increaseBtn.addEventListener('click', function (event) {
+    updateQuantity(event, 1);
+  });
+
+  const removeBtn = document.createElement('button');
+  removeBtn.textContent = 'Remove';
+  removeBtn.addEventListener('click', removeItem);
+
+  li.appendChild(infoSpan);
+  li.appendChild(decreaseBtn);
+  li.appendChild(increaseBtn);
+  li.appendChild(removeBtn);
+  cart.appendChild(li);
+
+  updateTotalPrice(price * quantity);
+}
